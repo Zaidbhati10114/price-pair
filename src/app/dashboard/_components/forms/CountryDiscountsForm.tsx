@@ -9,6 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { productCountryDiscountsSchema } from "@/schemas/products";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,8 +17,7 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { productCountryDiscountsSchema } from "@/schemas/products";
-//import { updateCountryDiscounts } from "@/server/actions/products"
+import { updateCountryDiscounts } from "@/server/actions/products";
 
 export function CountryDiscountsForm({
   productId,
@@ -39,7 +39,6 @@ export function CountryDiscountsForm({
   }[];
 }) {
   const { toast } = useToast();
-  console.log(countryGroups);
   const form = useForm<z.infer<typeof productCountryDiscountsSchema>>({
     resolver: zodResolver(productCountryDiscountsSchema),
     defaultValues: {
@@ -57,24 +56,24 @@ export function CountryDiscountsForm({
     },
   });
 
-  //   async function onSubmit(
-  //     values: z.infer<typeof productCountryDiscountsSchema>
-  //   ) {
-  //     const data = await updateCountryDiscounts(productId, values)
+  async function onSubmit(
+    values: z.infer<typeof productCountryDiscountsSchema>
+  ) {
+    const data = await updateCountryDiscounts(productId, values);
 
-  //     if (data.message) {
-  //       toast({
-  //         title: data.error ? "Error" : "Success",
-  //         description: data.message,
-  //         variant: data.error ? "destructive" : "default",
-  //       })
-  //     }
-  //   }
+    if (data.message) {
+      toast({
+        title: data.error ? "Error" : "Success",
+        description: data.message,
+        variant: data.error ? "destructive" : "default",
+      });
+    }
+  }
 
   return (
     <Form {...form}>
       <form
-        // onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="flex gap-6 flex-col"
       >
         {countryGroups.map((group, index) => (

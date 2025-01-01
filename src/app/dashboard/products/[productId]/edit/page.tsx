@@ -1,8 +1,9 @@
+import { CountryDiscountsForm } from "@/app/dashboard/_components/forms/CountryDiscountsForm";
+import { ProductCustomizationForm } from "@/app/dashboard/_components/forms/ProductCustomizationForm";
+
+import { ProductDetailsForm } from "@/app/dashboard/_components/forms/ProductDetailsForm";
+
 import { PageWithBackButton } from "@/app/dashboard/_components/PageWithBackButton";
-import { getProduct, getProductCountryGroups } from "@/server/db/products";
-import { auth } from "@clerk/nextjs/server";
-import { notFound } from "next/navigation";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
   CardContent,
@@ -10,26 +11,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ProductDetailsForm } from "@/app/dashboard/_components/forms/ProductDetailsForm";
-import { CountryDiscountsForm } from "@/app/dashboard/_components/forms/CountryDiscountsForm";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  getProduct,
+  getProductCountryGroups,
+  getProductCustomization,
+} from "@/server/db/products";
+import { canCustomizeBanner, canRemoveBranding } from "@/server/permissions";
+import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 
 export default async function EditProductPage({
-  params,
-  searchParams,
+  params: { productId },
+  searchParams: { tab = "details" },
 }: {
   params: { productId: string };
   searchParams: { tab?: string };
 }) {
-  const { userId } = await auth();
-  if (!userId) {
-    return notFound();
-  }
-
-  const productId = params.productId;
-  const tab = searchParams.tab || "details";
+  const { userId, redirectToSignIn } = auth();
+  if (userId == null) return redirectToSignIn();
 
   const product = await getProduct({ id: productId, userId });
-  if (!product) return notFound();
+  if (product == null) return notFound();
 
   return (
     <PageWithBackButton
@@ -49,7 +52,7 @@ export default async function EditProductPage({
           <CountryTab productId={productId} userId={userId} />
         </TabsContent>
         <TabsContent value="customization">
-          {/* <CustomizationsTab productId={productId} userId={userId} /> */}
+          <CustomizationsTab productId={productId} userId={userId} />
         </TabsContent>
       </Tabs>
     </PageWithBackButton>
@@ -90,8 +93,6 @@ async function CountryTab({
     userId,
   });
 
-  console.log(countryGroups);
-
   return (
     <Card>
       <CardHeader>
@@ -105,6 +106,33 @@ async function CountryTab({
         <CountryDiscountsForm
           productId={productId}
           countryGroups={countryGroups}
+        />
+      </CardContent>
+    </Card>
+  );
+}
+
+async function CustomizationsTab({
+  productId,
+  userId,
+}: {
+  productId: string;
+  userId: string;
+}) {
+  const customization = await getProductCustomization({ productId, userId });
+
+  if (customization == null) return notFound();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-xl">Banner Customization</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ProductCustomizationForm
+          canRemoveBranding={await canRemoveBranding(userId)}
+          canCustomizeBanner={await canCustomizeBanner(userId)}
+          customization={customization}
         />
       </CardContent>
     </Card>

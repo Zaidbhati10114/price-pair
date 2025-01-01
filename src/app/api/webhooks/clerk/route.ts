@@ -1,16 +1,21 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-//import { env } from "@/data/env/server";
-
-import { createUserSubscription } from "@/server/db/subscription";
+import { env } from "@/data/env/server";
+import {
+  createUserSubscription,
+  getUserSubscription,
+} from "@/server/db/subscription";
 import { deleteUser } from "@/server/db/users";
+import { Stripe } from "stripe";
+
+const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
 export async function POST(req: Request) {
   const headerPayload = headers();
-  const svixId = (await headerPayload).get("svix-id");
-  const svixTimestamp = (await headerPayload).get("svix-timestamp");
-  const svixSignature = (await headerPayload).get("svix-signature");
+  const svixId = headerPayload.get("svix-id");
+  const svixTimestamp = headerPayload.get("svix-timestamp");
+  const svixSignature = headerPayload.get("svix-signature");
 
   if (!svixId || !svixTimestamp || !svixSignature) {
     return new Response("Error occurred -- no svix headers", {
@@ -21,8 +26,7 @@ export async function POST(req: Request) {
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
-  const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET!);
-
+  const wh = new Webhook(env.CLERK_WEBHOOK_SECRET);
   let event: WebhookEvent;
 
   try {
@@ -48,6 +52,12 @@ export async function POST(req: Request) {
     }
     case "user.deleted": {
       if (event.data.id != null) {
+        const userSubscription = await getUserSubscription(event.data.id);
+        if (userSubscription?.stripeSubscriptionId != null) {
+          await stripe.subscriptions.cancel(
+            userSubscription?.stripeSubscriptionId
+          );
+        }
         await deleteUser(event.data.id);
       }
     }

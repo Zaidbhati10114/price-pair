@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { productDetailsSchema } from "@/schemas/products";
 import { createProduct, updateProduct } from "@/server/actions/products";
 import { useToast } from "@/hooks/use-toast";
-import { date } from "drizzle-orm/mysql-core";
 
 export const ProductDetailsForm = ({
   product,

@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,7 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,11 +15,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
-import { AddToSiteProductModalContent } from "./forms/AddToSiteModalContent";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { DeleteProductAlertDialogContent } from "./DeleteProductAlertDialogContent";
+import { AddToSiteProductModalContent } from "./AddToSiteModalContent";
 
 export function ProductGrid({
   products,
@@ -27,15 +27,15 @@ export function ProductGrid({
   products: {
     id: string;
     name: string;
-    description?: string | null;
     url: string;
+    description?: string | null;
   }[];
 }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {products.map((product) => {
-        return <ProductCard key={product.id} {...product} />;
-      })}
+      {products.map((product) => (
+        <ProductCard key={product.id} {...product} />
+      ))}
     </div>
   );
 }
