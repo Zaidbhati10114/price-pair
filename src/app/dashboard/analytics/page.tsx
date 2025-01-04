@@ -24,28 +24,35 @@ import { createURL } from "@/lib/utils";
 import { getProducts } from "@/server/db/products";
 import { TimezoneDropdownMenuItem } from "../_components/TimezoneDropdownMenuItem";
 
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * Page showing analytics for a user's products.
+ *
+ * @param searchParams The search parameters from the URL.
+ * @param searchParams.interval The interval of time to show views for.
+ * @param searchParams.timezone The timezone to show views for.
+ * @param searchParams.productId The ID of the product to show views for.
+ *
+ * @returns A page showing analytics for the product.
+ */
+/******  b84d4f87-4010-4b9c-a2cf-7b9199cf2e8f  *******/
 export default async function AnalyticsPage({
   searchParams,
 }: {
-  searchParams: Record<string, string | undefined>;
+  searchParams: {
+    interval?: string;
+    timezone?: string;
+    productId?: string;
+  };
 }) {
   const { userId, redirectToSignIn } = auth();
   if (userId == null) return redirectToSignIn();
 
-  // Remove undefined values from searchParams
-  const filteredSearchParams: Record<string, string> = Object.fromEntries(
-    Object.entries(searchParams).filter(([, value]) => value !== undefined) as [
-      string,
-      string
-    ][]
-  );
-
   const interval =
-    CHART_INTERVALS[
-      filteredSearchParams.interval as keyof typeof CHART_INTERVALS
-    ] ?? CHART_INTERVALS.last7Days;
-  const timezone = filteredSearchParams.timezone || "UTC";
-  const productId = filteredSearchParams.productId;
+    CHART_INTERVALS[searchParams.interval as keyof typeof CHART_INTERVALS] ??
+    CHART_INTERVALS.last7Days;
+  const timezone = searchParams.timezone || "UTC";
+  const productId = searchParams.productId;
 
   return (
     <>
@@ -64,13 +71,9 @@ export default async function AnalyticsPage({
                 {Object.entries(CHART_INTERVALS).map(([key, value]) => (
                   <DropdownMenuItem asChild key={key}>
                     <Link
-                      href={createURL(
-                        "/dashboard/analytics",
-                        filteredSearchParams,
-                        {
-                          interval: key,
-                        }
-                      )}
+                      href={createURL("/dashboard/analytics", searchParams, {
+                        interval: key,
+                      })}
                     >
                       {value.label}
                     </Link>
@@ -81,7 +84,7 @@ export default async function AnalyticsPage({
             <ProductDropdown
               userId={userId}
               selectedProductId={productId}
-              searchParams={filteredSearchParams}
+              searchParams={searchParams}
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -93,18 +96,14 @@ export default async function AnalyticsPage({
               <DropdownMenuContent>
                 <DropdownMenuItem asChild>
                   <Link
-                    href={createURL(
-                      "/dashboard/analytics",
-                      filteredSearchParams,
-                      {
-                        timezone: "UTC",
-                      }
-                    )}
+                    href={createURL("/dashboard/analytics", searchParams, {
+                      timezone: "UTC",
+                    })}
                   >
                     UTC
                   </Link>
                 </DropdownMenuItem>
-                <TimezoneDropdownMenuItem searchParams={filteredSearchParams} />
+                <TimezoneDropdownMenuItem searchParams={searchParams} />
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -143,17 +142,9 @@ async function ProductDropdown({
 }: {
   userId: string;
   selectedProductId?: string;
-  searchParams: Record<string, string | undefined>;
+  searchParams: Record<string, string>;
 }) {
   const products = await getProducts(userId);
-
-  // Filter undefined values from searchParams
-  const filteredSearchParams: Record<string, string> = Object.fromEntries(
-    Object.entries(searchParams).filter(([, value]) => value !== undefined) as [
-      string,
-      string
-    ][]
-  );
 
   return (
     <DropdownMenu>
@@ -167,8 +158,8 @@ async function ProductDropdown({
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
           <Link
-            href={createURL("/dashboard/analytics", filteredSearchParams, {
-              productId: undefined, // Explicitly handled for "All Products"
+            href={createURL("/dashboard/analytics", searchParams, {
+              productId: undefined,
             })}
           >
             All Products
@@ -177,7 +168,7 @@ async function ProductDropdown({
         {products.map((product) => (
           <DropdownMenuItem asChild key={product.id}>
             <Link
-              href={createURL("/dashboard/analytics", filteredSearchParams, {
+              href={createURL("/dashboard/analytics", searchParams, {
                 productId: product.id,
               })}
             >

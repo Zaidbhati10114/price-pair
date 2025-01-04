@@ -21,6 +21,7 @@ import { productCustomizationSchema } from "@/schemas/products";
 import { updateProductCustomization } from "@/server/actions/products";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 export function ProductCustomizationForm({
   customization,

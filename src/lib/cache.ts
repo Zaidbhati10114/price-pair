@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { revalidateTag, unstable_cache } from "next/cache";
 import { cache } from "react";
 
@@ -30,15 +31,11 @@ export function clearFullCache() {
   revalidateTag("*");
 }
 
-export function dbCache<Args extends unknown[], Return>(
-  cb: (...args: Args) => Promise<Return>,
+export function dbCache<T extends (...args: any[]) => Promise<any>>(
+  cb: Parameters<typeof unstable_cache<T>>[0],
   { tags }: { tags: ValidTags[] }
 ) {
-  return cache(
-    unstable_cache<(...args: Args) => Promise<Return>>(cb, undefined, {
-      tags: [...tags, "*"],
-    })
-  );
+  return cache(unstable_cache<T>(cb, undefined, { tags: [...tags, "*"] }));
 }
 
 export function revalidateDbCache({
