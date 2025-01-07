@@ -24,18 +24,6 @@ import { createURL } from "@/lib/utils";
 import { getProducts } from "@/server/db/products";
 import { TimezoneDropdownMenuItem } from "../_components/TimezoneDropdownMenuItem";
 
-/*************  ✨ Codeium Command ⭐  *************/
-/**
- * Page showing analytics for a user's products.
- *
- * @param searchParams The search parameters from the URL.
- * @param searchParams.interval The interval of time to show views for.
- * @param searchParams.timezone The timezone to show views for.
- * @param searchParams.productId The ID of the product to show views for.
- *
- * @returns A page showing analytics for the product.
- */
-/******  b84d4f87-4010-4b9c-a2cf-7b9199cf2e8f  *******/
 export default async function AnalyticsPage({
   searchParams,
 }: {

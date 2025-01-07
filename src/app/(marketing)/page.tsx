@@ -207,7 +207,7 @@ function PricingCard({
         </Feature>
         <Feature>PPP discounts</Feature>
         {canAccessAnalytics && <Feature>Advanced analytics</Feature>}
-        {canRemoveBranding && <Feature>Remove Easy PPP branding</Feature>}
+        {canRemoveBranding && <Feature>Remove Price Pair branding</Feature>}
         {canCustomizeBanner && <Feature>Banner customization</Feature>}
       </CardFooter>
     </Card>

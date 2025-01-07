@@ -81,7 +81,7 @@ export const ClientPricingCard = ({
         <Feature>PPP discounts</Feature>
         {canCustomizeBanner && <Feature>Banner customization</Feature>}
         {canAccessAnalytics && <Feature>Advanced analytics</Feature>}
-        {canRemoveBranding && <Feature>Remove Easy PPP branding</Feature>}
+        {canRemoveBranding && <Feature>Remove Price Pair branding</Feature>}
       </CardFooter>
     </Card>
   );

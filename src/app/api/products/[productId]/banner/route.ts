@@ -5,7 +5,7 @@ import { createProductView } from "@/server/db/productViews";
 import { canRemoveBranding, canShowDiscountBanner } from "@/server/permissions";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createElement } from "react";
 
 export const runtime = "edge";
@@ -16,9 +16,11 @@ export async function GET(
 ) {
   const headersMap = headers();
   const requestingUrl = headersMap.get("referer") || headersMap.get("origin");
-  if (requestingUrl == null) return notFound();
+  if (requestingUrl == null)
+    return NextResponse.json("requesting url not found");
+
   const countryCode = getCountryCode(request);
-  if (countryCode == null) return notFound();
+  if (countryCode == null) return NextResponse.json("Country code not found");
 
   const { product, discount, country } = await getProductForBanner({
     id: productId,
