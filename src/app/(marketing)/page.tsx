@@ -16,23 +16,23 @@ import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { BrandLogo } from "@/components/BrandLogo";
 import { formatCompactNumber } from "@/lib/formatters";
-import { NeonIcon } from "./_icons/Neon";
-import { ClerkIcon } from "./_icons/Clerk";
+
 import { subscriptionTiersInOrder } from "@/data/subscriptionTiers";
+import FeaturesSection from "./_components/FeatureCard";
 
 // Define trusted companies data with unique identifiers
-const trustedCompanies = [
-  { id: "neon-1", icon: NeonIcon, href: "https://neon.tech" },
-  { id: "clerk-1", icon: ClerkIcon, href: "https://clerk.com" },
-  { id: "neon-2", icon: NeonIcon, href: "https://neon.tech" },
-  { id: "clerk-2", icon: ClerkIcon, href: "https://clerk.com" },
-  { id: "neon-3", icon: NeonIcon, href: "https://neon.tech" },
-  { id: "clerk-3", icon: ClerkIcon, href: "https://clerk.com" },
-  { id: "neon-4", icon: NeonIcon, href: "https://neon.tech" },
-  { id: "clerk-4", icon: ClerkIcon, href: "https://clerk.com" },
-  { id: "neon-5", icon: NeonIcon, href: "https://neon.tech" },
-  { id: "clerk-5", icon: ClerkIcon, href: "https://clerk.com" },
-];
+// const trustedCompanies = [
+//   { id: "neon-1", icon: NeonIcon, href: "https://neon.tech" },
+//   { id: "clerk-1", icon: ClerkIcon, href: "https://clerk.com" },
+//   { id: "neon-2", icon: NeonIcon, href: "https://neon.tech" },
+//   { id: "clerk-2", icon: ClerkIcon, href: "https://clerk.com" },
+//   { id: "neon-3", icon: NeonIcon, href: "https://neon.tech" },
+//   { id: "clerk-3", icon: ClerkIcon, href: "https://clerk.com" },
+//   { id: "neon-4", icon: NeonIcon, href: "https://neon.tech" },
+//   { id: "clerk-4", icon: ClerkIcon, href: "https://clerk.com" },
+//   { id: "neon-5", icon: NeonIcon, href: "https://neon.tech" },
+//   { id: "clerk-5", icon: ClerkIcon, href: "https://clerk.com" },
+// ];
 
 export default function HomePage() {
   return (
@@ -51,7 +51,8 @@ export default function HomePage() {
           </Button>
         </SignUpButton>
       </section>
-      <section className="bg-primary text-primary-foreground">
+      <FeaturesSection />
+      {/* <section className="bg-primary text-primary-foreground">
         <div className="container py-16 flex flex-col gap-16 px-8 md:px-16">
           <h2 className="text-3xl text-center text-balance">
             Trusted by the top modern companies
@@ -74,7 +75,7 @@ export default function HomePage() {
             })}
           </div>
         </div>
-      </section>
+      </section> */}
       <section id="pricing" className="px-8 py-16 bg-accent/5">
         <h2 className="text-4xl text-center text-balance font-semibold mb-8">
           Pricing software which pays for itself 20x over
@@ -86,61 +87,77 @@ export default function HomePage() {
         </div>
       </section>
       <footer className="container pt-16 pb-8 flex flex-col sm:flex-row gap-8 sm:gap-4 justify-between items-start">
-        <Link href="/">
-          <BrandLogo />
-        </Link>
+        <div className="flex flex-col gap-2">
+          <Link href="/" className="inline-block">
+            <BrandLogo />
+          </Link>
+          <p className="text-md text-muted-foreground">
+            Developed by Zaid Bhati
+          </p>
+        </div>
+
         <div className="flex flex-col sm:flex-row gap-8">
           <div className="flex flex-col gap-8">
-            <FooterLinkGroup
+            {/* <FooterLinkGroup
               title="Help"
               links={[
                 { id: "help-1", label: "PPP Discounts", href: "#" },
                 { id: "help-2", label: "Discount API", href: "#" },
               ]}
-            />
-            <FooterLinkGroup
+            /> */}
+            {/* <FooterLinkGroup
               title="Solutions"
               links={[
                 { id: "solutions-1", label: "Newsletter", href: "#" },
                 { id: "solutions-2", label: "SaaS Business", href: "#" },
                 { id: "solutions-3", label: "Online Courses", href: "#" },
               ]}
-            />
+            /> */}
           </div>
           <div className="flex flex-col gap-8">
-            <FooterLinkGroup
+            {/* <FooterLinkGroup
               title="Features"
               links={[{ id: "features-1", label: "PPP Discounts", href: "#" }]}
-            />
-            <FooterLinkGroup
+            /> */}
+            {/* <FooterLinkGroup
               title="Tools"
               links={[
                 { id: "tools-1", label: "Salary Converter", href: "#" },
                 { id: "tools-2", label: "Coupon Generator", href: "#" },
                 { id: "tools-3", label: "Stripe App", href: "#" },
               ]}
-            />
-            <FooterLinkGroup
+            /> */}
+            {/* <FooterLinkGroup
               title="Company"
               links={[
                 { id: "company-1", label: "Affiliate", href: "#" },
                 { id: "company-2", label: "Twitter", href: "#" },
                 { id: "company-3", label: "Terms of Service", href: "#" },
               ]}
-            />
+            /> */}
           </div>
           <div className="flex flex-col gap-8">
             <FooterLinkGroup
               title="Integrations"
               links={[
-                { id: "integrations-1", label: "Lemon Squeezy", href: "#" },
-                { id: "integrations-2", label: "Gumroad", href: "#" },
-                { id: "integrations-3", label: "Stripe", href: "#" },
-                { id: "integrations-4", label: "Chargebee", href: "#" },
-                { id: "integrations-5", label: "Paddle", href: "#" },
+                {
+                  id: "integrations-1",
+                  label: "Github",
+                  href: "https://github.com/Zaidbhati10114",
+                },
+                {
+                  id: "integrations-2",
+                  label: "LinkedIn",
+                  href: "https://www.linkedin.com/in/zaid-bhati-427a79192/",
+                },
+                {
+                  id: "integrations-3",
+                  label: "Twitter",
+                  href: "https://x.com/Zaidbhati4",
+                },
               ]}
             />
-            <FooterLinkGroup
+            {/* <FooterLinkGroupß
               title="Tutorials"
               links={[
                 { id: "tutorials-1", label: "Any Website", href: "#" },
@@ -150,7 +167,7 @@ export default function HomePage() {
                 { id: "tutorials-5", label: "Chargebee", href: "#" },
                 { id: "tutorials-6", label: "Paddle", href: "#" },
               ]}
-            />
+            /> */}
           </div>
         </div>
       </footer>
@@ -239,10 +256,12 @@ function FooterLinkGroup({
   return (
     <div className="flex flex-col gap-4">
       <h3 className="font-semibold">{title}</h3>
-      <ul className="flex flex-col gap-2 text-sm">
+      <ul className="flex flex-col gap-2 text-md">
         {links.map((link) => (
           <li key={link.id}>
-            <Link href={link.href}>{link.label}</Link>
+            <Link target="_blank" href={link.href}>
+              {link.label}
+            </Link>
           </li>
         ))}
       </ul>
